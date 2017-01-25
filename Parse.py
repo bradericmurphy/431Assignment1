@@ -2,17 +2,18 @@ import sys, re, io, string
 charCounter = 0
 
 
-emailPattern = r"(^[\w.+-]+@[\w-]+\.[\w-.]+$)"
-
-mailFromPattern = "^MAIL[\s\t]+FROM:"
+mailFrom = "^MAIL[\s]+FROM:"
+mailFromPattern = re.compile(mailFrom)
 
 for line in sys.stdin:
-print(line)
-strList = line.split(':', 1)
-mailFromString = strList[0]+':'
+    print(line.rstrip("\n"))
+    strList = line.split(':', 1)
+    mailFromString = strList[0]+':'
+    if (not (bool(mailFromPattern.match(mailFromString)))):
+        print("ERROR -- mail-from-cmd")
 
-if (!(bool(mailFromString.match(mailFromPattern)))):
-    print("ERROR -- mail-from-cmd")
+    restOfString = strList[1].lstrip()
+    if
 
 
 
@@ -34,10 +35,11 @@ def d(character):
 
 
 def special(character):
+    val = ord(character)
     return (val == 60 | val == 62 | val == 40 | val == 41 | val == 91 | val == 93 | val == 92 | val == 46 | val == 44 | val == 59 | val == 58 | val == 64 | val == 34)
 
 
-def c(character)
+def c(character):
     val = ord(character)
     return ((val < 128) & (val != 60 | val != 62 | val != 40 | val != 41 | val != 91 | val != 93 | val != 92 | val != 46 | val != 44 | val != 59 | val != 58 | val != 64 | val != 34 | val != 32))
 
@@ -59,7 +61,7 @@ def crlf(character):
 def letDig(character):
     return bool(a(character) | d(character))
 
-def letdigstr(character, charCounter):
-    if (bool(a(character))):
+#def letdigstr(character, charCounter):
+ #   if (bool(a(character)))
 
-def MailFromCmd()
+#def MailFromCmd():
