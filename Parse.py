@@ -24,8 +24,6 @@ def d(character):
 
 def special(thisstring):
     return bool(specialPattern.search(thisstring))
-    #val = ord(character)
-    #return bool(val == 60 | val == 62 | val == 40 | val == 41 | val == 91 | val == 93 | val == 92 | val == 46 | val == 44 | val == 59 | val == 58 | val == 64 | val == 34)
 
 def c(character):
     val = ord(character)
@@ -47,11 +45,6 @@ def crlf(character):
 def letDig(character):
     return bool(a(character) | d(character))
 
-#def letdigstr(character, charCounter):
- #   if (bool(a(character)))
-
-#def MailFromCmd():
-
 for line in sys.stdin:
     print(line.rstrip("\n"))
     strList = line.split(':', 1)
@@ -67,9 +60,13 @@ for line in sys.stdin:
         continue
 
     strList = restOfString.split('@', 1)
+    atCheck = restOfString.split('@')
+
     strin = strList[0]
 
-    if len(strList) < 2:
+
+    #Workaround Check
+    if len(atCheck) != 2:
         print("ERROR -- mailbox")
         continue
 
@@ -97,6 +94,13 @@ for line in sys.stdin:
     for i in range (0, len(strList), 1):
 
         domain = strList[i]
+        testDomain = domain.split()
+
+        if len(testDomain) > 0:
+            if sp(testDomain[0]):
+                print("ERROR -- path")
+                keepGoing = False
+                break
 
         if len(domain) < 1:
             print("ERROR -- domain")
@@ -108,7 +112,7 @@ for line in sys.stdin:
             keepGoing = False
             break
 
-        if i !=len(strList):
+        if i != len(strList):
             if not letDig(domain[1:]):
                 print("ERROR -- domain")
                 keepGoing = False
@@ -119,14 +123,14 @@ for line in sys.stdin:
                 keepGoing = False
                 break
 
-
     if not keepGoing: continue
 
     lastStr = lastStr.rstrip()
     finalChar = lastStr[-1]
 
+
+
     if finalChar != '>':
-        print(finalChar)
         print("ERROR -- path")
         continue
 
