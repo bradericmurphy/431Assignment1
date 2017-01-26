@@ -70,6 +70,8 @@ for line in sys.stdin:
         print("ERROR -- mailbox")
         continue
 
+    #End workaround check
+
     remainingStr = '@' + strList[1]
     strin = strin.lstrip('<')
 
