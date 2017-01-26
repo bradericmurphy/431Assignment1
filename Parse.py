@@ -17,8 +17,10 @@ specialPattern = re.compile(special)
 a = "[A-Za-z]"
 aPattern = re.compile(a)
 
+
+
 def d(character):
-    return bool(character.match(numPattern))
+    return bool(numPattern.match(character))
 
 def special(thisstring):
     return bool(specialPattern.search(thisstring))
@@ -32,8 +34,8 @@ def c(character):
 def sp(thisstring):
     return bool(whitespacePattern.search(thisstring))
 
-def a(character):
-    return bool(aPattern.match(character))
+def a(thisstring):
+    return bool(aPattern.match(thisstring))
 
 def charCheck(character):
     return c(character)
@@ -60,32 +62,72 @@ for line in sys.stdin:
 
 
     restOfString = strList[1].lstrip()
-    if ord(restOfString[0]) != 60:
+    if restOfString[0] != '<':
         print("ERROR -- path")
         continue
 
     strList = restOfString.split('@', 1)
     strin = strList[0]
+
+    if len(strList) < 2:
+        print("ERROR -- mailbox")
+        continue
+
     remainingStr = '@' + strList[1]
     strin = strin.lstrip('<')
+
     stopHereCheck = sp(strin)
     if special(strin):
         stopHereCheck = True
 
     if stopHereCheck == True:
         print("ERROR -- local-part")
-       #print(strin + str(len(strin)))#used for testing
         continue
 
+    if remainingStr[0] != '@':
+        print("ERROR -- mailbox")
+        continue
+
+    domainOn = remainingStr.lstrip('@')
+    strList = domainOn.split('.')
+    lastStr = strList[len(strList) - 1]
 
 
+    keepGoing = True
+    for i in range (0, len(strList), 1):
+
+        domain = strList[i]
+
+        if len(domain) < 1:
+            print("ERROR -- domain")
+            keepGoing = False
+            break
+
+        if not a(domain[0]):
+            print("ERROR -- domain")
+            keepGoing = False
+            break
+
+        if i !=len(strList):
+            if not letDig(domain[1:]):
+                print("ERROR -- domain")
+                keepGoing = False
+                break
+        else:
+            if not letDig(domain[0:len(domain) - 2]):
+                print("ERROR -- domain")
+                keepGoing = False
+                break
 
 
+    if not keepGoing: continue
 
+    lastStr = lastStr.rstrip()
+    finalChar = lastStr[-1]
 
+    if finalChar != '>':
+        print(finalChar)
+        print("ERROR -- path")
+        continue
 
-    #print (line.rstrip("\r\n"))
-    #fromStr = line.split(' ', 1)[0]
-    #print(fromStr)
-
-
+    print("Sender ok")
